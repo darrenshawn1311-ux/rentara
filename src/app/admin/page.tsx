@@ -86,7 +86,19 @@ export default function AdminPanel() {
         status: "verified",
         verifiedAt: new Date().toISOString().slice(0, 10),
         reviewedBy: "Admin",
-        checklist: Object.fromEntries(CHECKLIST_KEYS.map((k) => [k, true])) as VerificationChecklist,
+        checklist: {
+          identityVerified: true,
+          whatsappActive: true,
+          agencyConfirmed: true,
+          licenseUploaded: true,
+          ownershipConfirmed: true,
+          photosReviewed: true,
+          priceConfirmed: true,
+          availabilityConfirmed: true,
+          depositFeesConfirmed: true,
+          locationConfirmed: true,
+          responseTimeCollected: true,
+        },
       },
     }));
     setReviewingAgent(null);

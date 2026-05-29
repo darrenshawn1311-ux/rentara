@@ -40,6 +40,7 @@ export interface Database {
           is_verified?: boolean;
           created_at?: string;
         };
+        Relationships: [];
       };
       listings: {
         Row: {
@@ -108,6 +109,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       waitlist: {
         Row: {
@@ -137,6 +139,7 @@ export interface Database {
           rental_budget?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       inquiries: {
         Row: {
@@ -166,6 +169,7 @@ export interface Database {
           status?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;
