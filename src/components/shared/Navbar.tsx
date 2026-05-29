@@ -8,8 +8,9 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Marketplace", href: "/marketplace" },
+  { label: "Find Agents", href: "/agents" },
   { label: "How It Works", href: "/#how-it-works" },
-  { label: "For Agents", href: "/#for-agents" },
+  { label: "For Agents", href: "/#agent-program" },
 ];
 
 export default function Navbar({ transparent = false }: { transparent?: boolean }) {

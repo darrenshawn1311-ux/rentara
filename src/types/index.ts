@@ -108,3 +108,56 @@ export const AMENITIES = [
 ] as const;
 
 export type Amenity = (typeof AMENITIES)[number];
+
+/* ─── Agent verification ───────────────────────────────────────────── */
+export type VerificationStatus =
+  | "pending"
+  | "in_review"
+  | "verified"
+  | "rejected"
+  | "suspended";
+
+export interface VerificationChecklist {
+  identityVerified: boolean;
+  whatsappActive: boolean;
+  agencyConfirmed: boolean;
+  licenseUploaded: boolean;
+  ownershipConfirmed: boolean;
+  photosReviewed: boolean;
+  priceConfirmed: boolean;
+  availabilityConfirmed: boolean;
+  depositFeesConfirmed: boolean;
+  locationConfirmed: boolean;
+  responseTimeCollected: boolean;
+}
+
+export interface VerificationRecord {
+  status: VerificationStatus;
+  checklist: VerificationChecklist;
+  reviewedAt?: string;
+  reviewedBy?: string;
+  rejectionReason?: string;
+  notes?: string;
+  verifiedAt?: string;
+}
+
+export const EMPTY_CHECKLIST: VerificationChecklist = {
+  identityVerified: false,
+  whatsappActive: false,
+  agencyConfirmed: false,
+  licenseUploaded: false,
+  ownershipConfirmed: false,
+  photosReviewed: false,
+  priceConfirmed: false,
+  availabilityConfirmed: false,
+  depositFeesConfirmed: false,
+  locationConfirmed: false,
+  responseTimeCollected: false,
+};
+
+/* ─── User segmentation ────────────────────────────────────────────── */
+export type UserIntent = "renter" | "agent" | null;
+
+export interface UserSession {
+  intent: UserIntent;
+}

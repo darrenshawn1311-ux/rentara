@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -31,9 +32,11 @@ import {
   ChevronLeft,
   PawPrint,
   CheckCircle2,
+  User,
 } from "lucide-react";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { useLang } from "@/lib/i18n/LanguageContext";
 import ListingCard from "@/components/listings/ListingCard";
 import VerifiedBadge from "@/components/ui/VerifiedBadge";
 import { formatIDR, bedroomLabel, cn } from "@/lib/utils";
@@ -74,6 +77,8 @@ export default function ListingDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
+  const { t } = useLang();
   const listing = SAMPLE_LISTINGS.find((l) => l.id === id);
 
   if (!listing) notFound();
@@ -298,11 +303,33 @@ export default function ListingDetailPage({
                     {/* Agent info */}
                     {listing.agent && (
                       <div className="flex items-center gap-3 pb-4 border-b border-[#e2e8f0]">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#19d3c5] to-[#0b1f5c] flex items-center justify-center text-white font-bold">
-                          {listing.agent.full_name?.[0] ?? "A"}
-                        </div>
+                        <button
+                          onClick={() => router.push(`/agents/${listing.agent_id}`)}
+                          className="relative flex-shrink-0 group cursor-pointer"
+                          aria-label={`View ${listing.agent.full_name}'s profile`}
+                        >
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#19d3c5] to-[#0b1f5c] flex items-center justify-center text-white font-bold">
+                            {listing.agent.full_name?.[0] ?? "A"}
+                          </div>
+                          <div className="absolute inset-0 rounded-full bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                            <svg
+                              className="w-4 h-4 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          </div>
+                        </button>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-[#0b1f5c] text-sm">{listing.agent.full_name}</p>
+                          <button
+                            onClick={() => router.push(`/agents/${listing.agent_id}`)}
+                            className="font-semibold text-[#0b1f5c] text-sm hover:underline underline-offset-2 transition-colors text-left cursor-pointer"
+                          >
+                            {listing.agent.full_name}
+                          </button>
                           <div className="flex items-center gap-1">
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star key={i} size={11} className="fill-[#19d3c5] text-[#19d3c5]" />
@@ -338,6 +365,16 @@ export default function ListingDetailPage({
                         <MessageCircle size={16} />
                         Chat on WhatsApp
                       </a>
+                    )}
+
+                    {listing.agent_id && (
+                      <button
+                        onClick={() => router.push(`/agents/${listing.agent_id}`)}
+                        className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#0b1f5c] text-[#0b1f5c] font-semibold text-sm bg-white hover:bg-[#0b1f5c] hover:text-white transition-colors duration-200"
+                      >
+                        <User size={16} />
+                        {t("listing.viewAgentProfile")}
+                      </button>
                     )}
 
                     <div className="flex gap-2">

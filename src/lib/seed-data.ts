@@ -2,13 +2,13 @@ import type { Listing, Profile } from "@/types";
 
 export const SAMPLE_AGENT: Profile = {
   id: "agent-001",
-  full_name: "Budi Santoso",
-  email: "budi@rentara.id",
-  phone_whatsapp: "6281234567890",
-  avatar_url: null,
+  full_name: "Nadia Kusuma",
+  email: "nadia@prestigepropertygroup.id",
+  phone_whatsapp: "628111234001",
+  avatar_url: "https://randomuser.me/api/portraits/women/51.jpg",
   role: "agent",
   is_verified: true,
-  created_at: "2024-01-01T00:00:00Z",
+  created_at: "2018-01-01T00:00:00Z",
 };
 
 export const SAMPLE_LISTINGS: Listing[] = [
@@ -38,7 +38,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-002",
-    agent_id: "agent-001",
+    agent_id: "agent-002",
     title: "Modern 2BR Townhouse Kemang",
     description:
       "Beautifully designed townhouse in Kemang's most sought-after enclave. Private garden, two dedicated parking spots, pet-friendly compound.",
@@ -62,7 +62,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-003",
-    agent_id: "agent-001",
+    agent_id: "agent-003",
     title: "Cozy 1BR Apartment Menteng",
     description:
       "Classic Dutch colonial-era neighborhood with modern apartment living. Walking distance to embassies and Menteng Park.",
@@ -86,7 +86,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-004",
-    agent_id: "agent-001",
+    agent_id: "agent-004",
     title: "Executive 3BR in BSD City",
     description:
       "Spacious family home in BSD City's green township. Close to international schools and Aeon Mall. Brand new development.",
@@ -110,7 +110,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-005",
-    agent_id: "agent-001",
+    agent_id: "agent-006",
     title: "Sea-view Studio at PIK Avenue",
     description:
       "Modern studio steps from PIK Avenue mall and the marina. Stunning sea views from upper floors. Perfect for young professionals.",
@@ -134,7 +134,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-006",
-    agent_id: "agent-001",
+    agent_id: "agent-005",
     title: "Heritage Villa Pondok Indah",
     description:
       "Grand villa in Jakarta's most prestigious residential address. Mature trees, private pool, five-car garage. Rarely available.",
@@ -158,7 +158,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-007",
-    agent_id: "agent-001",
+    agent_id: "agent-006",
     title: "Modern 2BR Kelapa Gading Square",
     description:
       "Move-in ready apartment above La Piazza Kelapa Gading. Vibrant F&B scene, good transport links, family-friendly.",
@@ -182,7 +182,7 @@ export const SAMPLE_LISTINGS: Listing[] = [
   },
   {
     id: "listing-008",
-    agent_id: "agent-001",
+    agent_id: "agent-005",
     title: "Penthouse 3BR Senayan City Tower",
     description:
       "Ultra-premium penthouse above Senayan City mall. Private lift lobby, wrap-around terrace, bespoke Italian kitchen.",

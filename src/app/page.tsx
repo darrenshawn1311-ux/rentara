@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   motion,
@@ -26,11 +27,17 @@ import {
   MapPin,
   PawPrint,
 } from "lucide-react";
+import Image from "next/image";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import VerifiedBadge from "@/components/ui/VerifiedBadge";
+import { AgentCard } from "@/components/agents/AgentCard";
+import { UserSegmentModal } from "@/components/shared/UserSegmentModal";
+import { useIntent } from "@/lib/IntentContext";
+import { useLang } from "@/lib/i18n/LanguageContext";
 import { formatIDR, cn } from "@/lib/utils";
 import { SAMPLE_LISTINGS } from "@/lib/seed-data";
+import { AGENTS } from "@/lib/agents";
 import { createClient } from "@/lib/supabase";
 
 /* ─── Animation variants ──────────────────────────────────────────── */
@@ -141,6 +148,10 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 /* ─── Main page ───────────────────────────────────────────────────── */
 export default function HomePage() {
+  const router = useRouter();
+  const { setIntent } = useIntent();
+  const { t } = useLang();
+
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -331,6 +342,23 @@ export default function HomePage() {
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/20 text-white font-semibold text-base hover:bg-white/10 transition-all"
               >
                 Join Waitlist
+              </button>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mt-4 flex-wrap">
+              <span className="text-blue-200/60 text-sm">or jump straight to:</span>
+              <button
+                onClick={() => { setIntent("renter"); router.push("/marketplace"); }}
+                className="text-sm text-[#19d3c5] hover:text-[#4dddd1] underline underline-offset-2 transition-colors"
+              >
+                {t("segment.renter.label")}
+              </button>
+              <span className="text-blue-200/40">·</span>
+              <button
+                onClick={() => { setIntent("agent"); router.push("/agents/onboarding"); }}
+                className="text-sm text-[#d9cbb8] hover:text-white underline underline-offset-2 transition-colors"
+              >
+                {t("segment.agent.label")}
               </button>
             </motion.div>
           </motion.div>
@@ -623,6 +651,237 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── FEATURED AGENTS ──────────────────────────────────────── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={stagger}
+            className="flex items-end justify-between mb-12"
+          >
+            <div>
+              <motion.p variants={fadeUp} className="text-[#19d3c5] text-sm font-semibold uppercase tracking-widest mb-2">
+                Top Agents
+              </motion.p>
+              <motion.h2
+                variants={fadeUp}
+                className="text-4xl sm:text-5xl font-black text-[#0b1f5c]"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                Jakarta&apos;s top
+                <br />
+                verified agents.
+              </motion.h2>
+              <motion.p variants={fadeUp} className="text-[#6b7a99] mt-3 text-base">
+                Handpicked specialists. Proven track records.
+              </motion.p>
+            </div>
+            <motion.div variants={fadeUp}>
+              <Link
+                href="/agents"
+                className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-[#0b1f5c] hover:text-[#19d3c5] transition-colors"
+              >
+                See all agents →
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x">
+            {AGENTS
+              .filter((a) => ["agent-003", "agent-001", "agent-005"].includes(a.id))
+              .sort((a, b) => b.rating - a.rating)
+              .map((agent, i) => (
+                <motion.div
+                  key={agent.id}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.12, duration: 0.5, ease: "easeOut" }}
+                  className="shrink-0 snap-start w-80"
+                >
+                  <AgentCard agent={agent} />
+                </motion.div>
+              ))}
+          </div>
+
+          <div className="text-center mt-8 sm:hidden">
+            <Link href="/agents" className="text-sm font-semibold text-[#0b1f5c] hover:text-[#19d3c5] transition-colors">
+              See all agents →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── AGENT PROGRAM ─────────────────────────────────────────── */}
+      <section id="agent-program" className="py-24 bg-[#f7f3ee] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+            {/* Left column */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="flex flex-col gap-6"
+            >
+              <span className="inline-flex w-fit items-center px-3 py-1.5 rounded-full text-xs font-bold bg-[#19d3c5]/12 text-[#0fb5a8] uppercase tracking-widest border border-[#19d3c5]/25">
+                For Agents
+              </span>
+
+              <h2
+                className="text-4xl sm:text-5xl font-black text-[#0b1f5c] leading-tight"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                Your next client is already looking.{" "}
+                <span className="text-[#19d3c5]">Be the agent they find.</span>
+              </h2>
+
+              <p className="text-[#6b7a99] text-lg leading-relaxed">
+                Rentara&apos;s verified agent program connects you with serious renters — not tire-kickers. Every lead is pre-qualified by area, budget, and move-in date.
+              </p>
+
+              <ul className="space-y-3">
+                {[
+                  "Verified profile badge renters trust",
+                  "WhatsApp leads sent directly to you",
+                  "Analytics dashboard to track performance",
+                ].map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-[#19d3c5]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle2 size={12} className="text-[#19d3c5]" />
+                    </div>
+                    <span className="text-[#0b1f5c] font-medium text-sm">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div>
+                <button
+                  onClick={() => document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" })}
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#0b1f5c] text-white font-bold text-base hover:bg-[#122470] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  Join the Agent Program →
+                </button>
+                <p className="text-[#6b7a99] text-xs mt-3">
+                  Currently accepting agents in SCBD, Kemang, Menteng and 8 more areas
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Right column */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+              className="relative pt-6"
+            >
+              {/* Card A — Agent Profile Preview */}
+              <div
+                className="bg-white rounded-2xl p-5 relative z-10"
+                style={{ boxShadow: "0 16px 48px -8px rgba(25,211,197,0.18), 0 4px 16px rgba(11,31,92,0.08)" }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-full ring-2 ring-[#19d3c5] ring-offset-2 overflow-hidden flex-shrink-0">
+                    <Image
+                      src={AGENTS[0].avatar}
+                      alt={AGENTS[0].name}
+                      width={56}
+                      height={56}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-[#0b1f5c] text-sm">{AGENTS[0].name}</span>
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#19d3c5]/10 text-[#0fb5a8] border border-[#19d3c5]/25">
+                        ✓ Verified
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#6b7a99] truncate">{AGENTS[0].agency}</p>
+                    <div className="flex items-center gap-0.5 mt-0.5">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Star key={i} size={10} className="fill-amber-400 text-amber-400" />
+                      ))}
+                      <span className="text-xs font-semibold text-[#0b1f5c] ml-1">{AGENTS[0].rating}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {AGENTS[0].areas.map((area) => (
+                    <span
+                      key={area}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium border border-[#19d3c5]/30 text-[#0fb5a8] bg-[#19d3c5]/5"
+                    >
+                      <MapPin size={8} />
+                      {area}
+                    </span>
+                  ))}
+                </div>
+
+                <a
+                  href={`https://wa.me/${AGENTS[0].whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 rounded-xl bg-[#19d3c5] text-[#0b1f5c] font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#0fb5a8] transition-colors"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L.057 23.571a.5.5 0 0 0 .617.632l5.938-1.554A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.648-.523-5.153-1.43l-.359-.214-3.723.976.994-3.634-.234-.374A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                  </svg>
+                  WhatsApp
+                </a>
+              </div>
+
+              {/* Card B — Analytics (floating, overlaps Card A) */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="bg-[#0b1f5c] rounded-2xl p-5 -mt-6 ml-8 relative z-20 shadow-2xl"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1 h-4 rounded-full bg-[#19d3c5]" />
+                  <span className="text-white text-sm font-semibold" style={{ fontFamily: "Poppins, sans-serif" }}>
+                    Your Performance
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { label: "Views", value: "12.4k" },
+                    { label: "Leads", value: "342" },
+                    { label: "WhatsApp Chats", value: "278" },
+                    { label: "Response Rate", value: "98%" },
+                  ].map((stat) => (
+                    <div key={stat.label} className="bg-white/8 rounded-xl p-3">
+                      <div className="flex items-start justify-between mb-1">
+                        <span
+                          className="text-white text-xl font-black"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {stat.value}
+                        </span>
+                        <span className="text-emerald-400 text-[10px] font-semibold flex items-center gap-0.5 mt-1">
+                          <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
+                            <path d="M4 1L7 5H1L4 1Z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <span className="text-white/50 text-[10px]">{stat.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ── AREAS ────────────────────────────────────────────────── */}
       <section className="py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-10">
@@ -863,6 +1122,8 @@ export default function HomePage() {
       </section>
 
       <Footer />
+
+      <UserSegmentModal />
     </div>
   );
 }
